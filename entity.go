@@ -40,6 +40,7 @@ type SkrillDepositBackReq struct {
 // -----------------------------------
 type SkrillWithdrawReq struct {
 	UserID      int64   `json:"userId"`      // 用户ID
+	UserEmail   string  `json:"userEmail"`   // 邮箱
 	PayAmount   float64 `json:"payAmount"`   // 支付金额
 	PayCurrency string  `json:"payCurrency"` // 支付货币
 	ID          int64   `json:"id"`          //业务订单id
