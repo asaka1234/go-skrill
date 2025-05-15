@@ -2,15 +2,10 @@ package go_skrill
 
 // ----------pre order-------------------------
 type SkrillDepositReq struct {
-	PayToEmail           string `json:"pay_to_email"`
 	Currency             string `json:"currency"`
 	Amount               string `json:"amount"`
 	Detail1Text          string `json:"detail1_text"`
-	Detail1Description   string `json:"detail1_description"`
-	StatusURL            string `json:"status_url"`
 	Language             string `json:"language"`
-	URL                  string `json:"url"` //回调地址?
-	PayLink              string `json:"payLink"`
 	TransactionID        string `json:"transaction_id"`
 	RecipientDescription string `json:"recipient_description"`
 
