@@ -1,14 +1,14 @@
-package go_mpay
+package go_skrill
 
 import (
 	"errors"
 	"fmt"
-	"github.com/asaka1234/go-mpay/utils"
+	"github.com/asaka1234/go-skrill/utils"
 	"strings"
 )
 
 // 充值的回调处理(传入一个处理函数)
-func (cli *Client) DepositCallback(req MPayDepositBackReq, processor func(MPayDepositBackReq) error) error {
+func (cli *Client) DepositCallback(req SkrillDepositBackReq, processor func(SkrillDepositBackReq) error) error {
 	//验证签名
 
 	cli.logger.Infof("mpay<----%+v", req)

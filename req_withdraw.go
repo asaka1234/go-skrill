@@ -2,14 +2,13 @@ package go_skrill
 
 import (
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"github.com/asaka1234/go-skrill/utils"
 	"github.com/spf13/cast"
 	"time"
 )
 
-func (cli *Client) Deposit(req SkrillDepositReq) (map[string]interface{}, error) {
+func (cli *Client) Withdraw(req SkrillWithdrawReq) (*SkrillWithdrawResponse, error) {
 
 	loc := time.FixedZone("UTC+8", 8*60*60)
 
@@ -44,6 +43,9 @@ func (cli *Client) Deposit(req SkrillDepositReq) (map[string]interface{}, error)
 	fmt.Printf("--->raw: %s", payUrl)
 	fmt.Printf("--->encryption: %s", encryption)
 
+	//返回值会放到这里
+	var result SkrillWithdrawResponse
+
 	// 构建请求参数
 	paramMap := map[string]interface{}{
 		"bizId":      cli.BizId,
@@ -64,19 +66,7 @@ func (cli *Client) Deposit(req SkrillDepositReq) (map[string]interface{}, error)
 		return nil, err
 	}
 
+	fmt.Printf("<---rsp: %+v", result)
+
 	return &result, err
-}
-
-// 辅助结构体
-type Ext struct {
-	Bank Bank `json:"bank"`
-}
-
-type Bank struct {
-	UserName string `json:"user_name"`
-}
-
-func toJSONString(v interface{}) string {
-	b, _ := json.Marshal(v)
-	return string(b)
 }

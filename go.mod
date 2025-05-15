@@ -1,4 +1,4 @@
-module github.com/asaka1234/go-mpay
+module github.com/asaka1234/go-skrill
 
 go 1.24.2
 
