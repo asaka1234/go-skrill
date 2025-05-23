@@ -1,12 +1,10 @@
 package go_skrill
 
 import (
+	"crypto/tls"
 	"encoding/xml"
 	"fmt"
 	"github.com/spf13/cast"
-	"io/ioutil"
-	"net/http"
-	"net/url"
 )
 
 //文档： https://www.skrill.com/fileadmin/content/pdf/Skrill_Automated_Payments_Interface_Guide.pdf 的4章节:4. SEND MONEY USING AN HTTPS REQUEST
@@ -43,34 +41,38 @@ func (cli *Client) Withdraw(req SkrillWithdrawReq) (*SkrillWithdrawResponse, err
 	</response>
 */
 func (cli *Client) InitSession(req SkrillWithdrawReq) (string, error) {
+	rawURL := cli.WithdrawUrl
+
 	// 1. 准备一个session环境, 返回的是这个session的id
-	reqParams := url.Values{}
-	reqParams.Set("action", "prepare")
-	reqParams.Set("email", cli.WithdrawMerchantEmail)       //Your merchant account email address
-	reqParams.Set("password", cli.WithdrawMerchantPassword) //Your MD5 API/MQI password.
-	reqParams.Set("amount", cast.ToString(req.PayAmount))
-	reqParams.Set("currency", cast.ToString(req.PayCurrency))   //EUR
-	reqParams.Set("bnf_email", req.UserEmail)                   //收到钱的人的邮箱
-	reqParams.Set("subject", "Withdraw:"+cast.ToString(req.ID)) //Subject of the notification email. 发给邮箱的邮件内容
-	reqParams.Set("note", "Withdraw:"+cast.ToString(req.ID))    //Comment to be included in the notification email.  邮件里的一个备注
-	reqParams.Set("frn_trn_id", cast.ToString(req.ID))          //唯一id
+	params := map[string]string{
+		"action":     "prepare",
+		"email":      cli.WithdrawMerchantEmail,    //Your merchant account email address
+		"password":   cli.WithdrawMerchantPassword, //Your MD5 API/MQI password.
+		"amount":     cast.ToString(req.PayAmount),
+		"currency":   cast.ToString(req.PayCurrency),      //EUR
+		"bnf_email":  req.UserEmail,                       //收到钱的人的邮箱
+		"subject":    "Withdraw:" + cast.ToString(req.ID), //Subject of the notification email. 发给邮箱的邮件内容
+		"note":       "Withdraw:" + cast.ToString(req.ID), //Comment to be included in the notification email.  邮件里的一个备注
+		"frn_trn_id": cast.ToString(req.ID),               //唯一id
+	}
 
 	//-----------------------------------------------------
 	// 预下单
 	// Step 3: Send prepare request
-	prepareRsp, err := http.Get(cli.WithdrawUrl + "?" + reqParams.Encode())
+	// 发送HTTP请求
+	resp1, err := cli.ryClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
+		SetCloseConnection(true).
+		R().
+		SetHeaders(getHeaders()).
+		SetFormData(params).
+		Post(rawURL)
+
 	if err != nil {
+		cli.logger.Errorf("请求失败: %s", err.Error())
 		return "", err
 	}
-	defer prepareRsp.Body.Close()
-
-	//------------------------------------------------
-
-	body, err := ioutil.ReadAll(prepareRsp.Body)
-	if err != nil {
-		return "", err
-	}
-	cli.logger.Infof("skrill withdraw prepareRsp %s", string(body))
+	body := resp1.Body()
+	cli.logger.Infof("skrill withdraw prepareRsp: %s", string(body))
 
 	// Step 4: Parse XML response
 	type Error struct {
@@ -113,22 +115,26 @@ func (cli *Client) InitSession(req SkrillWithdrawReq) (string, error) {
 */
 // 在session环境中直接来pre-order
 func (cli *Client) SendWithdrawRequest(sid string) (*SkrillWithdrawResponse, error) {
+	rawURL := cli.WithdrawUrl
 
-	transferParams := url.Values{}
-	transferParams.Set("action", "transfer")
-	transferParams.Set("sid", sid)
-
-	transferRsp, err := http.Get(cli.WithdrawUrl + "?" + transferParams.Encode())
-	if err != nil {
-		return nil, fmt.Errorf("transfer request failed: %v", err)
-	}
-	defer transferRsp.Body.Close()
-
-	transferBody, err := ioutil.ReadAll(transferRsp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read transfer response: %v", err)
+	transferParams := map[string]string{
+		"action": "transfer",
+		"sid":    sid,
 	}
 
+	// 发送HTTP请求
+	resp1, err := cli.ryClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
+		SetCloseConnection(true).
+		R().
+		SetHeaders(getHeaders()).
+		SetFormData(transferParams).
+		Post(rawURL)
+
+	if err != nil {
+		cli.logger.Errorf("请求失败: %s", err.Error())
+		return nil, err
+	}
+	transferBody := resp1.Body()
 	cli.logger.Infof("skrill withdraw transferRsp %s", string(transferBody))
 
 	//-----------------------------------------------------

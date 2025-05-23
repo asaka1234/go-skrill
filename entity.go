@@ -2,21 +2,20 @@ package go_skrill
 
 // ----------pre order-------------------------
 type SkrillDepositReq struct {
-	Currency           string `json:"currency" mapstructure:"currency"`
-	Amount             string `json:"amount" mapstructure:"amount"`
-	Detail1Text        string `json:"detail1_text" mapstructure:"detail1_text"`
-	Detail1Description string `json:"detail1_description" mapstructure:"detail1_description"`
-	Language           string `json:"language" mapstructure:"language"`
-	TransactionID      string `json:"transaction_id" mapstructure:"transaction_id"`
-	StatusURL          string `json:"status_url" mapstructure:"status_url"` //callback回调地址 . If you have provided a status_url value in your HTML form, Skrill will post the transaction details of each payment to that URL.
-	// ReturnURL          string `json:"return_url,omitempty"`          // optional
-	// ReturnURLTarget    string `json:"return_url_target,omitempty"`    // optional
-	RecipientDescription string `json:"recipient_description" mapstructure:"recipient_description"`
+	Currency             string `json:"currency" mapstructure:"currency"`
+	Amount               string `json:"amount" mapstructure:"amount"`
+	Detail1Text          string `json:"detail1_text" mapstructure:"detail1_text"`
+	Detail1Description   string `json:"detail1_description" mapstructure:"detail1_description"`
+	Language             string `json:"language" mapstructure:"language"` //EN
+	TransactionID        string `json:"transaction_id" mapstructure:"transaction_id"`
+	RecipientDescription string `json:"recipient_description" mapstructure:"recipient_description"` //Your Company Name
 	//这个是cpt这个skrill商户的账号, 说明是用这个账号收钱的. 这里sdk设置
 	//PayToEmail string `json:"pay_to_email"`
 	//这个是实际form提交的地址,也就是skrill提供的一个地址，也是sdk设置
 	//URL string `json:"url"`
-	//PayLink            string `json:"payLink"`
+	//PayLink            string `json:"payLink"` //请求psp的地址
+	//这个是回调地址,让sdk设置
+	//StatusURL string `json:"status_url" mapstructure:"status_url"` //callback回调地址 . If you have provided a status_url value in your HTML form, Skrill will post the transaction details of each payment to that URL.
 }
 
 // ---------------callback-----------------------
@@ -45,7 +44,7 @@ type SkrillWithdrawReq struct {
 	UserEmail   string  `json:"userEmail"`   // 邮箱
 	PayAmount   float64 `json:"payAmount"`   // 支付金额
 	PayCurrency string  `json:"payCurrency"` // 支付货币
-	ID          int64   `json:"id"`          //业务订单id
+	ID          int64   `json:"id"`          // 业务订单id
 }
 
 //------------------------------------------------------------
