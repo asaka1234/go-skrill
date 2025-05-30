@@ -25,7 +25,7 @@ func (cli *Client) DepositCallback(req SkrillDepositBackReq, processor func(Skri
 // 章节 9.4. MD5 signature
 func (cli *Client) getDepositBackMD5(cbRsp SkrillDepositBackReq) string {
 	// Concatenate all the required fields
-	data := cli.DepositMerchantId + cbRsp.TransactionID + strings.ToUpper(cli.DepositSetting) +
+	data := cli.Params.DepositMerchantId + cbRsp.TransactionID + strings.ToUpper(cli.Params.DepositSetting) +
 		cbRsp.MbAmount + cbRsp.MbCurrency + strconv.Itoa(cbRsp.Status)
 
 	// Create MD5 hash

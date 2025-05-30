@@ -41,13 +41,13 @@ func (cli *Client) Withdraw(req SkrillWithdrawReq) (*SkrillWithdrawResponse, err
 	</response>
 */
 func (cli *Client) InitSession(req SkrillWithdrawReq) (string, error) {
-	rawURL := cli.WithdrawUrl
+	rawURL := cli.Params.WithdrawUrl
 
 	// 1. 准备一个session环境, 返回的是这个session的id
 	params := map[string]string{
 		"action":     "prepare",
-		"email":      cli.WithdrawMerchantEmail,    //Your merchant account email address
-		"password":   cli.WithdrawMerchantPassword, //Your MD5 API/MQI password.
+		"email":      cli.Params.WithdrawMerchantEmail,    //Your merchant account email address
+		"password":   cli.Params.WithdrawMerchantPassword, //Your MD5 API/MQI password.
 		"amount":     cast.ToString(req.PayAmount),
 		"currency":   cast.ToString(req.PayCurrency),      //EUR
 		"bnf_email":  req.UserEmail,                       //收到钱的人的邮箱
@@ -115,7 +115,7 @@ func (cli *Client) InitSession(req SkrillWithdrawReq) (string, error) {
 */
 // 在session环境中直接来pre-order
 func (cli *Client) SendWithdrawRequest(sid string) (*SkrillWithdrawResponse, error) {
-	rawURL := cli.WithdrawUrl
+	rawURL := cli.Params.WithdrawUrl
 
 	transferParams := map[string]string{
 		"action": "transfer",
