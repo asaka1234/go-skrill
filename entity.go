@@ -1,16 +1,16 @@
 package go_skrill
 
 type SkrillInitParams struct {
-	DepositMerchantId string `json:"depositMerchantId" mapstructure:"depositMerchantId" config:"depositMerchantId"` //商户号
-	DepositEmail      string `json:"depositEmail" mapstructure:"depositEmail" config:"depositEmail"`                //从用户的srill账号扣款,划转给cpt的账号.  所以这里是cpt的账号
-	DepositSetting    string `json:"depositSetting" mapstructure:"depositSetting" config:"depositSetting"`          //webhook返回的数据,需要做md5签名验证, 是做这个用的.
-	DepositUrl        string `json:"depositUrl" mapstructure:"depositUrl" config:"depositUrl"`
-	DepositBackUrl    string `json:"depositBackUrl" mapstructure:"depositBackUrl" config:"depositBackUrl"` //充值回调
+	DepositMerchantId string `json:"depositMerchantId" mapstructure:"depositMerchantId" config:"depositMerchantId" yaml:"depositMerchantId"` //商户号
+	DepositEmail      string `json:"depositEmail" mapstructure:"depositEmail" config:"depositEmail" yaml:"depositEmail"`                     //从用户的srill账号扣款,划转给cpt的账号.  所以这里是cpt的账号
+	DepositSetting    string `json:"depositSetting" mapstructure:"depositSetting" config:"depositSetting" yaml:"depositSetting"`             //webhook返回的数据,需要做md5签名验证, 是做这个用的.
+	DepositUrl        string `json:"depositUrl" mapstructure:"depositUrl" config:"depositUrl" yaml:"depositUrl"`
+	DepositBackUrl    string `json:"depositBackUrl" mapstructure:"depositBackUrl" config:"depositBackUrl" yaml:"depositBackUrl"` //充值回调
 
-	WithdrawMerchantId       string `json:"withdrawMerchantId" mapstructure:"withdrawMerchantId" config:"withdrawMerchantId"`                   //商户号
-	WithdrawMerchantEmail    string `json:"withdrawMerchantEmail" mapstructure:"withdrawMerchantEmail" config:"withdrawMerchantEmail"`          //psp分配的账号
-	WithdrawMerchantPassword string `json:"withdrawMerchantPassword" mapstructure:"withdrawMerchantPassword" config:"withdrawMerchantPassword"` //psp分配的密码
-	WithdrawUrl              string `json:"withdrawUrl" mapstructure:"withdrawUrl" config:"withdrawUrl"`                                        //充值回调
+	WithdrawMerchantId       string `json:"withdrawMerchantId" mapstructure:"withdrawMerchantId" config:"withdrawMerchantId" yaml:"withdrawMerchantId"`                         //商户号
+	WithdrawMerchantEmail    string `json:"withdrawMerchantEmail" mapstructure:"withdrawMerchantEmail" config:"withdrawMerchantEmail" yaml:"withdrawMerchantEmail"`             //psp分配的账号
+	WithdrawMerchantPassword string `json:"withdrawMerchantPassword" mapstructure:"withdrawMerchantPassword" config:"withdrawMerchantPassword" yaml:"withdrawMerchantPassword"` //psp分配的密码
+	WithdrawUrl              string `json:"withdrawUrl" mapstructure:"withdrawUrl" config:"withdrawUrl" yaml:"withdrawUrl"`                                                     //充值回调
 }
 
 // ----------pre order-------------------------
