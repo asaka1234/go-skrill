@@ -27,7 +27,7 @@ func TestDeposit(t *testing.T) {
 
 	vLog := VLog{}
 	//构造client
-	cli := NewClient(vLog, SkrillInitParams{DepositId, DepositEmail, DepositSetting, DepositUrl, DepositCallbackUrl, WithdrawId, WithdrawMerchantEmail, WithdrawMerchantPassword, WithdrawUrl})
+	cli := NewClient(vLog, &SkrillInitParams{DepositId, DepositEmail, DepositSetting, DepositUrl, DepositCallbackUrl, WithdrawId, WithdrawMerchantEmail, WithdrawMerchantPassword, WithdrawUrl})
 
 	//发请求
 	resp, err := cli.Deposit(GenDepositRequestDemo())

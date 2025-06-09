@@ -6,14 +6,14 @@ import (
 )
 
 type Client struct {
-	Params SkrillInitParams
+	Params *SkrillInitParams
 
 	ryClient  *resty.Client
 	debugMode bool
 	logger    utils.Logger
 }
 
-func NewClient(logger utils.Logger, params SkrillInitParams) *Client {
+func NewClient(logger utils.Logger, params *SkrillInitParams) *Client {
 	return &Client{
 		Params: params,
 
