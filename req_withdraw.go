@@ -64,6 +64,7 @@ func (cli *Client) InitSession(req SkrillWithdrawReq) (string, error) {
 		SetCloseConnection(true).
 		R().
 		SetHeaders(getHeaders()).
+		SetDebug(cli.debugMode).
 		SetFormData(params).
 		Post(rawURL)
 
@@ -128,6 +129,7 @@ func (cli *Client) SendWithdrawRequest(sid string) (*SkrillWithdrawResponse, err
 		R().
 		SetHeaders(getHeaders()).
 		SetFormData(transferParams).
+		SetDebug(cli.debugMode).
 		Post(rawURL)
 
 	if err != nil {
