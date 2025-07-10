@@ -14,13 +14,15 @@ type SkrillInitParams struct {
 }
 
 // ----------pre order-------------------------
+// https://www.skrill.com/fileadmin/content/pdf/Skrill_Quick_Checkout_Guide.pdf
+// 2.3.3. Parameters to be posted to Quick Checkout
 type SkrillDepositReq struct {
 	Currency             string `json:"currency" mapstructure:"currency"`
 	Amount               string `json:"amount" mapstructure:"amount"`
 	Detail1Text          string `json:"detail1_text" mapstructure:"detail1_text"`
 	Detail1Description   string `json:"detail1_description" mapstructure:"detail1_description"`
-	Language             string `json:"language" mapstructure:"language"` //EN
-	TransactionID        string `json:"transaction_id" mapstructure:"transaction_id"`
+	Language             string `json:"language" mapstructure:"language"`                           //EN
+	TransactionID        string `json:"transaction_id" mapstructure:"transaction_id"`               //商户的唯一orderId
 	RecipientDescription string `json:"recipient_description" mapstructure:"recipient_description"` //Your Company Name
 	//这个是cpt这个skrill商户的账号, 说明是用这个账号收钱的. 这里sdk设置
 	//PayToEmail string `json:"pay_to_email"`
