@@ -13,6 +13,12 @@ func (cli *Client) Deposit(req SkrillDepositReq) (map[string]interface{}, error)
 
 	//最终是让前端构造一个form表单,用以提交请求给到deposit url上去
 
+	
+	// EUR币种请求三方拿到sid后再次调收银台
+	if req.Currency == "EUR" {
+		paramMap["prepare_only"] = "1"
+	}
+	
 	//补充公共字段
 	paramMap["pay_to_email"] = cli.Params.DepositEmail //给cpt的skrill账户充值
 	paramMap["url"] = cli.Params.DepositUrl            //发送请求的psp地址
