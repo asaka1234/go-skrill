@@ -4,6 +4,8 @@ import (
 	"crypto/tls"
 	"encoding/xml"
 	"fmt"
+	"github.com/asaka1234/go-skrill/utils"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/spf13/cast"
 )
 
@@ -68,12 +70,25 @@ func (cli *Client) InitSession(req SkrillWithdrawReq) (string, error) {
 		SetFormData(params).
 		Post(rawURL)
 
+	restLog, _ := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(utils.GetRestyLog(resp1))
+	cli.logger.Infof("PSPResty#skrill#init->%+v", string(restLog))
+
 	if err != nil {
 		cli.logger.Errorf("请求失败: %s", err.Error())
 		return "", err
 	}
+
+	if resp1.StatusCode() != 200 {
+		//反序列化错误会在此捕捉
+		return "", fmt.Errorf("status code: %d", resp1.StatusCode())
+	}
+
+	if resp1.Error() != nil {
+		//反序列化错误会在此捕捉
+		return "", fmt.Errorf("%s", resp1.Error())
+	}
+
 	body := resp1.Body()
-	cli.logger.Infof("skrill withdraw prepareRsp: %s", string(body))
 
 	// Step 4: Parse XML response
 	type Error struct {
@@ -132,12 +147,25 @@ func (cli *Client) SendWithdrawRequest(sid string) (*SkrillWithdrawResponse, err
 		SetDebug(cli.debugMode).
 		Post(rawURL)
 
+	restLog, _ := jsoniter.ConfigCompatibleWithStandardLibrary.Marshal(utils.GetRestyLog(resp1))
+	cli.logger.Infof("PSPResty#skrill#withdraw->%+v", string(restLog))
+
 	if err != nil {
 		cli.logger.Errorf("请求失败: %s", err.Error())
 		return nil, err
 	}
+
+	if resp1.StatusCode() != 200 {
+		//反序列化错误会在此捕捉
+		return nil, fmt.Errorf("status code: %d", resp1.StatusCode())
+	}
+
+	if resp1.Error() != nil {
+		//反序列化错误会在此捕捉
+		return nil, fmt.Errorf("%s", resp1.Error())
+	}
+
 	transferBody := resp1.Body()
-	cli.logger.Infof("skrill withdraw transferRsp %s", string(transferBody))
 
 	//-----------------------------------------------------
 
