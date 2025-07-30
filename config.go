@@ -6,6 +6,7 @@ const (
 	DepositSetting     = "1111 LIMITED"
 	DepositUrl         = "https://pay.skrill.com"
 	DepositCallbackUrl = "" //充值回调
+	SecretWord         = "CPT"
 
 	//https://www.skrill.com/fileadmin/content/pdf/Skrill_Automated_Payments_Interface_Guide.pdf
 	WithdrawId               = "12222"                             //提现回调

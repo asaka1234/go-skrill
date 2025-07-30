@@ -6,6 +6,7 @@ type SkrillInitParams struct {
 	DepositSetting    string `json:"depositSetting" mapstructure:"depositSetting" config:"depositSetting" yaml:"depositSetting"`             //webhook返回的数据,需要做md5签名验证, 是做这个用的.
 	DepositUrl        string `json:"depositUrl" mapstructure:"depositUrl" config:"depositUrl" yaml:"depositUrl"`
 	DepositBackUrl    string `json:"depositBackUrl" mapstructure:"depositBackUrl" config:"depositBackUrl" yaml:"depositBackUrl"` //充值回调
+	SecretWord        string `json:"secretWord" mapstructure:"secretWord" config:"secretWord" yaml:"secretWord"`                 // 秘钥词 用于回调验签
 
 	WithdrawMerchantId       string `json:"withdrawMerchantId" mapstructure:"withdrawMerchantId" config:"withdrawMerchantId" yaml:"withdrawMerchantId"`                         //商户号
 	WithdrawMerchantEmail    string `json:"withdrawMerchantEmail" mapstructure:"withdrawMerchantEmail" config:"withdrawMerchantEmail" yaml:"withdrawMerchantEmail"`             //psp分配的账号

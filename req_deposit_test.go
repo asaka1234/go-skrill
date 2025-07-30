@@ -27,7 +27,7 @@ func TestDeposit(t *testing.T) {
 
 	vLog := VLog{}
 	//构造client
-	cli := NewClient(vLog, &SkrillInitParams{DepositId, DepositEmail, DepositSetting, DepositUrl, DepositCallbackUrl, WithdrawId, WithdrawMerchantEmail, WithdrawMerchantPassword, WithdrawUrl})
+	cli := NewClient(vLog, &SkrillInitParams{DepositId, DepositEmail, DepositSetting, DepositUrl, DepositCallbackUrl, SecretWord, WithdrawId, WithdrawMerchantEmail, WithdrawMerchantPassword, WithdrawUrl})
 
 	//发请求
 	resp, err := cli.Deposit(GenDepositRequestDemo())
@@ -36,6 +36,38 @@ func TestDeposit(t *testing.T) {
 		return
 	}
 	fmt.Printf("resp:%+v\n", resp)
+}
+
+func TestDepositCallback(t *testing.T) {
+	vLog := VLog{}
+
+	cli := NewClient(vLog, &SkrillInitParams{DepositId, DepositEmail, DepositSetting, DepositUrl, DepositCallbackUrl, SecretWord, WithdrawId, WithdrawMerchantEmail, WithdrawMerchantPassword, WithdrawUrl})
+
+	//发请求
+	cli.DepositCallback(GetDepositCallbackReq(), DepositBackProcessor)
+
+}
+
+func GetDepositCallbackReq() SkrillDepositBackReq {
+	return SkrillDepositBackReq{
+		TransactionID: "202507241121330681",
+		MbAmount:      "200",
+		Amount:        "200",
+		Md5sig:        "F18698B327ED616ACD4DA7BEB7643C32",
+		MerchantID:    "210526825",
+		//PaymentType: "",
+		MbTransactionID: "6393550374",
+		MbCurrency:      "USD",
+		PayFromEmail:    "hamp_31%40yahoo.com",
+		PayToEmail:      "fin%40cptinternational.com",
+		Currency:        "USD",
+		CustomerID:      "168399354",
+		Status:          2,
+	}
+}
+
+func DepositBackProcessor(req SkrillDepositBackReq) error {
+	return nil
 }
 
 func GenDepositRequestDemo() SkrillDepositReq {
